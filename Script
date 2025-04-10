@@ -1,77 +1,90 @@
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+local player = game.Players.LocalPlayer
+local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+screenGui.Name = "TWVZ_UI"
+screenGui.ResetOnSpawn = false
 
--- UI Setup
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "TWVZ_UI"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = PlayerGui
+-- UIHolder
+local mainFrame = Instance.new("Frame")
+mainFrame.Parent = screenGui
+mainFrame.Name = "MainUI"
+mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+mainFrame.BorderSizePixel = 0
+mainFrame.Position = UDim2.new(0.1, 0, 0.05, 0)
+mainFrame.Size = UDim2.new(0, 750, 0, 500)
+mainFrame.BackgroundTransparency = 0.2
 
--- Main UI Frame
-local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 800, 0, 500)
-MainFrame.Position = UDim2.new(0.5, -400, 0.5, -250)
-MainFrame.BackgroundTransparency = 0.15
-MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-MainFrame.BorderSizePixel = 0
-MainFrame.Parent = ScreenGui
+-- UICorner
+local corner = Instance.new("UICorner", mainFrame)
+corner.CornerRadius = UDim.new(0, 12)
 
--- UICorner for rounded style
-local Corner = Instance.new("UICorner")
-Corner.CornerRadius = UDim.new(0, 12)
-Corner.Parent = MainFrame
+-- Sidebar
+local sidebar = Instance.new("Frame", mainFrame)
+sidebar.Name = "Sidebar"
+sidebar.Size = UDim2.new(0, 170, 1, 0)
+sidebar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+sidebar.BackgroundTransparency = 0.1
 
--- Sidebar (Tabs)
-local Sidebar = Instance.new("Frame")
-Sidebar.Size = UDim2.new(0, 150, 1, 0)
-Sidebar.Position = UDim2.new(0, 0, 0, 0)
-Sidebar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Sidebar.BorderSizePixel = 0
-Sidebar.Parent = MainFrame
+Instance.new("UICorner", sidebar).CornerRadius = UDim.new(0, 10)
 
-local function createTab(name, index)
-    local button = Instance.new("TextButton")
-    button.Name = name .. "Tab"
-    button.Size = UDim2.new(1, 0, 0, 35)
-    button.Position = UDim2.new(0, 0, 0, 10 + (index - 1) * 40)
-    button.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-    button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    button.Font = Enum.Font.GothamSemibold
-    button.TextSize = 14
-    button.Text = "  " .. name
-    button.TextXAlignment = Enum.TextXAlignment.Left
-    button.Parent = Sidebar
-
-    local icon = Instance.new("ImageLabel")
-    icon.Size = UDim2.new(0, 20, 0, 20)
-    icon.Position = UDim2.new(0, 10, 0.5, -10)
-    icon.BackgroundTransparency = 1
-    icon.Image = "rbxassetid://6035047409" -- Placeholder icon
-    icon.Parent = button
-
-    return button
+-- Tab Button Template
+local function createTabButton(name, order)
+	local btn = Instance.new("TextButton")
+	btn.Name = name
+	btn.Text = name
+	btn.Parent = sidebar
+	btn.Position = UDim2.new(0, 10, 0, (order - 1) * 40 + 10)
+	btn.Size = UDim2.new(1, -20, 0, 30)
+	btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.Font = Enum.Font.Gotham
+	btn.TextSize = 14
+	btn.AutoButtonColor = true
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+	return btn
 end
 
--- Tabs List
-local tabNames = {
-    "Infos", "Main", "Dungeon", "Castle", "Rank", "Raid", "Teleport",
-    "Sell", "Mount", "Shop", "Exchange", "Upgrader", "Boosts", "Experimental",
-    "Webhook", "Settings"
-}
+-- Content Holder (right panel)
+local contentFrame = Instance.new("Frame", mainFrame)
+contentFrame.Name = "Content"
+contentFrame.Position = UDim2.new(0, 180, 0, 10)
+contentFrame.Size = UDim2.new(1, -190, 1, -20)
+contentFrame.BackgroundTransparency = 1
 
+-- Tab Pages Table
+local tabs = {}
+
+local function createTabPage(name, contentText)
+	local page = Instance.new("Frame", contentFrame)
+	page.Name = name
+	page.Visible = false
+	page.Size = UDim2.new(1, 0, 1, 0)
+	page.BackgroundTransparency = 1
+
+	local label = Instance.new("TextLabel", page)
+	label.Text = contentText
+	label.Size = UDim2.new(1, -20, 0, 30)
+	label.Position = UDim2.new(0, 10, 0, 10)
+	label.TextColor3 = Color3.fromRGB(255, 255, 255)
+	label.BackgroundTransparency = 1
+	label.Font = Enum.Font.GothamBold
+	label.TextSize = 20
+
+	tabs[name] = page
+end
+
+-- Create buttons + pages
+local tabNames = {"Infos", "Main", "Dungeon"}
 for i, name in ipairs(tabNames) do
-    createTab(name, i)
+	local button = createTabButton(name, i)
+	createTabPage(name, "Welcome to " .. name .. " tab!")
+
+	button.MouseButton1Click:Connect(function()
+		for _, page in pairs(tabs) do
+			page.Visible = false
+		end
+		tabs[name].Visible = true
+	end)
 end
 
--- Main Content Frame
-local ContentFrame = Instance.new("Frame")
-ContentFrame.Name = "ContentFrame"
-ContentFrame.Position = UDim2.new(0, 150, 0, 0)
-ContentFrame.Size = UDim2.new(1, -150, 1, 0)
-ContentFrame.BackgroundTransparency = 1
-ContentFrame.Parent = MainFrame
-
--- Ready to attach tab content later!
-
-print("TWVZ-style UI loaded!")
+-- Set default tab visible
+tabs["Infos"].Visible = true
