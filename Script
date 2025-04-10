@@ -3,19 +3,18 @@ local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
 screenGui.Name = "TWVZ_UI"
 screenGui.ResetOnSpawn = false
 
--- UIHolder
+-- Main UI Frame
 local mainFrame = Instance.new("Frame")
 mainFrame.Parent = screenGui
 mainFrame.Name = "MainUI"
 mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 mainFrame.BorderSizePixel = 0
 mainFrame.Position = UDim2.new(0.1, 0, 0.05, 0)
-mainFrame.Size = UDim2.new(0, 750, 0, 500)
+mainFrame.Size = UDim2.new(0, 600, 0, 500)
 mainFrame.BackgroundTransparency = 0.2
-
--- UICorner
-local corner = Instance.new("UICorner", mainFrame)
-corner.CornerRadius = UDim.new(0, 12)
+mainFrame.Active = true
+mainFrame.Draggable = true
+Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 12)
 
 -- Sidebar
 local sidebar = Instance.new("Frame", mainFrame)
@@ -23,10 +22,9 @@ sidebar.Name = "Sidebar"
 sidebar.Size = UDim2.new(0, 170, 1, 0)
 sidebar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 sidebar.BackgroundTransparency = 0.1
-
 Instance.new("UICorner", sidebar).CornerRadius = UDim.new(0, 10)
 
--- Tab Button Template
+-- Tab Buttons
 local function createTabButton(name, order)
 	local btn = Instance.new("TextButton")
 	btn.Name = name
@@ -43,48 +41,135 @@ local function createTabButton(name, order)
 	return btn
 end
 
--- Content Holder (right panel)
+-- Content Area
 local contentFrame = Instance.new("Frame", mainFrame)
 contentFrame.Name = "Content"
 contentFrame.Position = UDim2.new(0, 180, 0, 10)
 contentFrame.Size = UDim2.new(1, -190, 1, -20)
 contentFrame.BackgroundTransparency = 1
 
--- Tab Pages Table
+-- Tabs
 local tabs = {}
-
-local function createTabPage(name, contentText)
+local function createTabPage(name)
 	local page = Instance.new("Frame", contentFrame)
 	page.Name = name
 	page.Visible = false
 	page.Size = UDim2.new(1, 0, 1, 0)
 	page.BackgroundTransparency = 1
-
-	local label = Instance.new("TextLabel", page)
-	label.Text = contentText
-	label.Size = UDim2.new(1, -20, 0, 30)
-	label.Position = UDim2.new(0, 10, 0, 10)
-	label.TextColor3 = Color3.fromRGB(255, 255, 255)
-	label.BackgroundTransparency = 1
-	label.Font = Enum.Font.GothamBold
-	label.TextSize = 20
-
 	tabs[name] = page
+	return page
 end
 
--- Create buttons + pages
-local tabNames = {"Infos", "Main", "Dungeon"}
-for i, name in ipairs(tabNames) do
-	local button = createTabButton(name, i)
-	createTabPage(name, "Welcome to " .. name .. " tab!")
+-- Create Infos Tab
+local infosTab = createTabPage("Infos")
 
+-- Infos Header
+local header = Instance.new("TextLabel", infosTab)
+header.Text = "Infos"
+header.Size = UDim2.new(1, -20, 0, 40)
+header.Position = UDim2.new(0, 10, 0, 10)
+header.TextColor3 = Color3.fromRGB(255, 255, 255)
+header.BackgroundTransparency = 1
+header.Font = Enum.Font.GothamBold
+header.TextSize = 24
+header.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Support Section
+local function createInfoItem(parent, title, description, posY)
+	local container = Instance.new("Frame", parent)
+	container.Size = UDim2.new(1, -20, 0, 50)
+	container.Position = UDim2.new(0, 10, 0, posY)
+	container.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+	container.BackgroundTransparency = 0.1
+	Instance.new("UICorner", container).CornerRadius = UDim.new(0, 6)
+
+	local titleLabel = Instance.new("TextLabel", container)
+	titleLabel.Text = title
+	titleLabel.Size = UDim2.new(1, -20, 0, 20)
+	titleLabel.Position = UDim2.new(0, 10, 0, 5)
+	titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+	titleLabel.BackgroundTransparency = 1
+	titleLabel.Font = Enum.Font.GothamBold
+	titleLabel.TextSize = 16
+	titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+	local descLabel = Instance.new("TextLabel", container)
+	descLabel.Text = description
+	descLabel.Size = UDim2.new(1, -20, 0, 20)
+	descLabel.Position = UDim2.new(0, 10, 0, 25)
+	descLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+	descLabel.BackgroundTransparency = 1
+	descLabel.Font = Enum.Font.Gotham
+	descLabel.TextSize = 13
+	descLabel.TextXAlignment = Enum.TextXAlignment.Left
+end
+
+-- Add Info Items
+createInfoItem(infosTab, "Anti-AFK", "Anti-AFK is automatically enabled.", 120)
+
+--   (copy Discord link)
+local bugContainer = Instance.new("Frame", infosTab)
+bugContainer.Size = UDim2.new(1, -20, 0, 50)
+bugContainer.Position = UDim2.new(0, 10, 0, 180)
+bugContainer.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+bugContainer.BackgroundTransparency = 0.1
+Instance.new("UICorner", bugContainer).CornerRadius = UDim.new(0, 6)
+
+local bugTitle = Instance.new("TextLabel", bugContainer)
+bugTitle.Text = "Sever Discord"
+bugTitle.Size = UDim2.new(1, -20, 0, 20)
+bugTitle.Position = UDim2.new(0, 10, 0, 5)
+bugTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+bugTitle.BackgroundTransparency = 1
+bugTitle.Font = Enum.Font.GothamBold
+bugTitle.TextSize = 16
+bugTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local bugButton = Instance.new("TextButton", bugContainer)
+bugButton.Text = "Click to copy discord server invite"
+bugButton.Size = UDim2.new(1, -20, 0, 20)
+bugButton.Position = UDim2.new(0, 10, 0, 25)
+bugButton.BackgroundTransparency = 1
+bugButton.TextColor3 = Color3.fromRGB(180, 180, 180)
+bugButton.Font = Enum.Font.Gotham
+bugButton.TextSize = 13
+bugButton.TextXAlignment = Enum.TextXAlignment.Left
+bugButton.AutoButtonColor = false
+
+bugButton.MouseButton1Click:Connect(function()
+	setclipboard("https://discord.gg/ByyuBAJzwT")
+	bugButton.Text = "Copied!"
+	task.wait(1.5)
+	bugButton.Text = "Click to copy discord server invite"
+end)
+
+-- Các tab còn lại
+local tabNames = {"Infos", "Main", "Dungeon", "Castle"}
+for i, name in ipairs(tabNames) do
+	if not tabs[name] then createTabPage(name) end
+	local button = createTabButton(name, i)
 	button.MouseButton1Click:Connect(function()
-		for _, page in pairs(tabs) do
-			page.Visible = false
-		end
+		for _, page in pairs(tabs) do page.Visible = false end
 		tabs[name].Visible = true
 	end)
 end
-
--- Set default tab visible
 tabs["Infos"].Visible = true
+
+-- Toggle Button
+local toggleButton = Instance.new("TextButton", screenGui)
+toggleButton.Text = "tbao"
+toggleButton.Position = UDim2.new(0, 10, 1, -40)
+toggleButton.Size = UDim2.new(0, 80, 0, 30)
+toggleButton.BackgroundColor3 = Color3.fromRGB(40, 120, 40)
+toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggleButton.Font = Enum.Font.GothamBold
+toggleButton.TextSize = 14
+toggleButton.AutoButtonColor = true
+toggleButton.Active = true
+toggleButton.Draggable = true
+toggleButton.ZIndex = 10
+Instance.new("UICorner", toggleButton).CornerRadius = UDim.new(0, 6)
+
+toggleButton.MouseButton1Click:Connect(function()
+	mainFrame.Visible = not mainFrame.Visible
+end)
