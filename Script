@@ -1,0 +1,56 @@
+--// UI Menu Template for Arise Crossover Script (TWVZ Style)
+--// Using Rayfield Library (Make sure it is loaded)
+
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "Arise Crossover | twvz-style",
+    LoadingTitle = "Loading Menu...",
+    LoadingSubtitle = "by YourNameHere",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = nil,
+        FileName = "AriseCrossoverScript"
+    },
+    Discord = {
+        Enabled = false,
+        Invite = "",
+        RememberJoins = true
+    },
+    KeySystem = false,
+})
+
+--// Infos Tab
+local Infos = Window:CreateTab("Infos", 4483362458) -- Icon ID from Roblox
+Infos:CreateParagraph({Title = "Version 1.0.0", Content = "Welcome to your custom Arise script menu!"})
+Infos:CreateParagraph({Title = "Anti-AFK", Content = "Auto enabled to keep you in-game."})
+Infos:CreateButton({Name = "Join Discord", Callback = function()
+    setclipboard("https://discord.gg/yourinvite")
+    Rayfield:Notify({Title = "Copied!", Content = "Discord link copied to clipboard."})
+end})
+
+--// Main Tab
+local Main = Window:CreateTab("Main", 4483362458)
+-- Add toggles/buttons here later
+
+--// Dungeon Tab
+local Dungeon = Window:CreateTab("Dungeon", 4483362458)
+-- Add toggles/buttons here later
+
+--// Castle, Rank, Raid, Teleport...
+Window:CreateTab("Castle", 4483362458)
+Window:CreateTab("Rank", 4483362458)
+Window:CreateTab("Raid", 4483362458)
+Window:CreateTab("Teleport", 4483362458)
+Window:CreateTab("Sell", 4483362458)
+Window:CreateTab("Mount", 4483362458)
+Window:CreateTab("Shop", 4483362458)
+Window:CreateTab("Exchange", 4483362458)
+Window:CreateTab("Upgrader", 4483362458)
+Window:CreateTab("Boosts", 4483362458)
+Window:CreateTab("Experimental", 4483362458)
+Window:CreateTab("Webhook", 4483362458)
+Window:CreateTab("Settings", 4483362458)
+
+--// End of UI setup
+Rayfield:Load()
